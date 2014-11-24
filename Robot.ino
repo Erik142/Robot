@@ -5,7 +5,8 @@
 #define MOTOR2PIN1 5
 #define MOTOR2PIN2 4
 
-int turn = 0;
+
+int angle = 0;
 int mindistance = 20;
 int distances[4];
 
@@ -55,6 +56,7 @@ void TurnRight(int Grader) {
   digitalWrite(MOTOR2PIN2, LOW);
   
   delay(5*Grader);
+  angle -= Grader*180/PI;
 }
 
 //Funktion för att svänga vänster, samma som ovan
@@ -68,6 +70,7 @@ void TurnLeft(int Grader) {
   digitalWrite(MOTOR2PIN2, HIGH);
   
   delay(5*Grader);
+  angle += Grader*180/PI;
 }
 
 //Funktion för att omvandla avståndssensorns data till avstånd.
@@ -126,7 +129,7 @@ digitalWrite(MOTOR2PIN2, LOW);
 
 void loop() {
   // put your main code here, to run repeatedly: 
-  
+  /*
   //Möjlighet att ändra avståndet ifrån datorn
   if (Serial.available() > 0)
   {
@@ -210,8 +213,15 @@ void loop() {
   
   delay(100);*/
   
-  
-  
+  /*
+  //Turn test
+  for(int i=1 ; i<13 ; i++){
+    TurnLeft(10*i);
+    Stop();
+    delay(10000);
+  }
+  delay(100000);
+  */
 }
 
 
