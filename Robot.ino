@@ -105,32 +105,11 @@ int FindMax(int ARRAY[], byte START, byte END)
   return LOCATION;
 }
 
+//Huvudfunktion där roboten undviker hinder
 
-void setup() {
-  // put your setup code here, to run once:
+void Main(){
   
-  Serial.begin(9600);
-  
-pinMode(MOTOR1PIN1, OUTPUT);
-pinMode(MOTOR1PIN2, OUTPUT);
-
-pinMode(MOTOR2PIN1, OUTPUT);
-pinMode(MOTOR2PIN2, OUTPUT);
-
-pinMode(SENSORINPUT, INPUT);
-pinMode(SENSORTRIGGER, OUTPUT);
-
-digitalWrite(MOTOR1PIN1, LOW);
-digitalWrite(MOTOR1PIN2, LOW);
-
-digitalWrite(MOTOR2PIN1, LOW);
-digitalWrite(MOTOR2PIN2, LOW);
-}
-
-void loop() {
-  // put your main code here, to run repeatedly: 
-  /*
-  //Möjlighet att ändra avståndet ifrån datorn
+ //Möjlighet att ändra avståndet ifrån datorn
   if (Serial.available() > 0)
   {
     mindistance = Serial.parseInt();
@@ -206,22 +185,59 @@ void loop() {
         break;
     }
   }
+}
+
+void setup() {
+  // put your setup code here, to run once:
   
-  //else Stop();
+  Serial.begin(9600);
   
-  /*Serial.println(MeasureDistance());
+pinMode(MOTOR1PIN1, OUTPUT);
+pinMode(MOTOR1PIN2, OUTPUT);
+
+pinMode(MOTOR2PIN1, OUTPUT);
+pinMode(MOTOR2PIN2, OUTPUT);
+
+pinMode(SENSORINPUT, INPUT);
+pinMode(SENSORTRIGGER, OUTPUT);
+
+digitalWrite(MOTOR1PIN1, LOW);
+digitalWrite(MOTOR1PIN2, LOW);
+
+digitalWrite(MOTOR2PIN1, LOW);
+digitalWrite(MOTOR2PIN2, LOW);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly: 
+ 
+  TurnTest2();
   
-  delay(100);*/
   
-  /*
-  //Turn test
+}
+
+//Script för de olika test vi ska genomföra/har genomfört 
+
+void TurnTest1(){
   for(int i=1 ; i<13 ; i++){
     TurnLeft(10*i);
     Stop();
     delay(10000);
   }
   delay(100000);
-  */
+  
 }
 
+void TurnTest2(){
+  
+  TurnLeft(50000);
+  
+}
+
+void printDistance(){
+  
+  Serial.println(MeasureDistance());
+  delay(100);
+  
+}
 
