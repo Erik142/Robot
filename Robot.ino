@@ -7,7 +7,7 @@
 
 
 int angle = 0;
-int mindistance = 10;
+int mindistance = 20;
 int distances[4];
 
 /*Funktion för att färdas framåt, skall utvecklas
@@ -118,6 +118,7 @@ void Main(){
   
   if(MeasureDistance() > mindistance){
     DriveForward();
+    delay(100);
   } 
   else {
     for (int i = 0; i < 3; i++)
@@ -238,12 +239,6 @@ void TurnTest2(){
   
 }
 
-void printDistance(){
-  
-  Serial.println(MeasureDistance());
-  delay(100);
-  
-}
 
 void TurnTest3(){
   //Test av färdig svängfunktion
@@ -263,4 +258,11 @@ void TurnTest3(){
   TurnLeft(90);
   Stop();
   delay(4500);
+}
+
+void SensorTest(){
+  //Test av avståndssensorn
+  
+  Serial.println(MeasureDistance());
+  delay(100);
 }
