@@ -7,7 +7,7 @@
 
 
 int angle = 0;
-int mindistance = 20;
+int mindistance = 10;
 int distances[4];
 
 /*Funktion för att färdas framåt, skall utvecklas
@@ -55,7 +55,7 @@ void TurnRight(int Grader) {
   digitalWrite(MOTOR2PIN1, HIGH);
   digitalWrite(MOTOR2PIN2, LOW);
   
-  delay(5*Grader);
+  delay(5*(Grader+38));
   angle -= Grader*180/PI;
 }
 
@@ -69,7 +69,7 @@ void TurnLeft(int Grader) {
   digitalWrite(MOTOR2PIN1, LOW);
   digitalWrite(MOTOR2PIN2, HIGH);
   
-  delay(5*Grader);
+  delay(5*(Grader+38));
   angle += Grader*180/PI;
 }
 
@@ -136,27 +136,31 @@ void Main(){
     
     Stop();
     distances[0] = MeasureDistance();
+    delay(100);
     
     TurnLeft(45);
     
     Stop();
     distances[1] = MeasureDistance();
+    delay(100);
     
     TurnRight(135);
     
     Stop();
     distances[2] = MeasureDistance();
+    delay(100);
     
     TurnRight(45);
     
     Stop();
     distances[3] = MeasureDistance();
+    delay(100);
     
-    Serial.println("Measured distances:");
+    /*Serial.println("Measured distances:");
     for (int x = 0; x < 4; x++)
     {
     Serial.println(distances[x]);
-    }
+    }*/
     
     int Position = FindMax(distances, 0, 3);
     switch(Position)
@@ -211,7 +215,7 @@ digitalWrite(MOTOR2PIN2, LOW);
 void loop() {
   // put your main code here, to run repeatedly: 
  
-  TurnTest2();
+  Main();
   
   
 }
@@ -219,17 +223,17 @@ void loop() {
 //Script för de olika test vi ska genomföra/har genomfört 
 
 void TurnTest1(){
+  delay(10000);
   for(int i=1 ; i<13 ; i++){
     TurnLeft(10*i);
     Stop();
     delay(10000);
   }
-  delay(100000);
   
 }
 
 void TurnTest2(){
-  
+  delay(5000);
   TurnLeft(50000);
   
 }
@@ -241,3 +245,22 @@ void printDistance(){
   
 }
 
+void TurnTest3(){
+  //Test av färdig svängfunktion
+  delay(1000);
+  TurnLeft(45);
+  Stop();
+  delay(100);
+  TurnLeft(45);
+  Stop();
+  delay(100);
+  TurnRight(135);
+  Stop();
+  delay(100);
+  TurnRight(45);
+  Stop();
+  delay(100);
+  TurnLeft(90);
+  Stop();
+  delay(4500);
+}
