@@ -1,24 +1,41 @@
 #define SENSORINPUT 9 //Avståndssensor input-sensor
 #define SENSORTRIGGER 8 //Avståndssensor trigger-sensor
 #define MOTOR1PIN1 3
-#define MOTOR1PIN2 2
+#define MOTOR1PIN2 10
 #define MOTOR2PIN1 5
-#define MOTOR2PIN2 4
+#define MOTOR2PIN2 6
 
 
+float pwm_left_turbo = 243.3;
+float pwm_left_normal = 158;
+short pwm_right_normal = 170;
 int angle = 0;
 int mindistance = 20;
-int distances[4];
+int distances[8];
 
+void turbo() {
+  digitalWrite(MOTOR1PIN1, HIGH);
+  digitalWrite(MOTOR1PIN2, LOW);
+  
+  //digitalWrite(MOTOR2PIN1, HIGH);
+  //digitalWrite(MOTOR2PIN2, LOW);
+  
+  analogWrite(MOTOR2PIN1, pwm_left_turbo);
+  digitalWrite(MOTOR2PIN2, LOW);
+}
+  
 /*Funktion för att färdas framåt, skall utvecklas
 med ett argument i form utav avstånd*/
 void DriveForward() {
   //Serial.println("Spinning forward");
   
-  digitalWrite(MOTOR1PIN1, HIGH);
+  analogWrite(MOTOR1PIN1, pwm_right_normal);
   digitalWrite(MOTOR1PIN2, LOW);
   
-  digitalWrite(MOTOR2PIN1, HIGH);
+  //digitalWrite(MOTOR2PIN1, HIGH);
+  //digitalWrite(MOTOR2PIN2, LOW);
+  
+  analogWrite(MOTOR2PIN1, pwm_left_normal);
   digitalWrite(MOTOR2PIN2, LOW);
 }
 
@@ -49,28 +66,42 @@ void TurnRight(int Grader) {
   
   //Serial.println("Turning right");
   
-  digitalWrite(MOTOR1PIN1, LOW);
+  /*digitalWrite(MOTOR1PIN1, LOW);
   digitalWrite(MOTOR1PIN2, HIGH);
   
   digitalWrite(MOTOR2PIN1, HIGH);
+  digitalWrite(MOTOR2PIN2, LOW);*/
+  
+  digitalWrite(MOTOR1PIN1, LOW);
+  analogWrite(MOTOR1PIN2, pwm_right_normal);
+  
+  analogWrite(MOTOR2PIN1, pwm_left_normal*1.15);
   digitalWrite(MOTOR2PIN2, LOW);
   
   delay(5*(Grader+38));
   angle -= Grader*180/PI;
+  Stop();
 }
 
 //Funktion för att svänga vänster, samma som ovan
 void TurnLeft(int Grader) {
   //Serial.println("Turning left");
   
-  digitalWrite(MOTOR1PIN1, HIGH);
+  /*digitalWrite(MOTOR1PIN1, HIGH);
   digitalWrite(MOTOR1PIN2, LOW);
   
   digitalWrite(MOTOR2PIN1, LOW);
-  digitalWrite(MOTOR2PIN2, HIGH);
+  digitalWrite(MOTOR2PIN2, HIGH);*/
+  
+  analogWrite(MOTOR1PIN1, pwm_right_normal*1.01);
+  digitalWrite(MOTOR1PIN2, LOW);
+  
+  digitalWrite(MOTOR2PIN1, LOW);
+  analogWrite(MOTOR2PIN2, pwm_left_normal*1.01);
   
   delay(5*(Grader+38));
   angle += Grader*180/PI;
+  Stop();
 }
 
 //Funktion för att omvandla avståndssensorns data till avstånd.
@@ -115,8 +146,11 @@ void Main(){
     mindistance = Serial.parseInt();
   }
   
-  
-  if(MeasureDistance() > mindistance){
+  if(MeasureDistance() >= 100) {
+    turbo();
+    delay(100);
+  }
+  else if(MeasureDistance() > mindistance){
     DriveForward();
     delay(100);
   } 
@@ -145,6 +179,38 @@ void Main(){
     distances[1] = MeasureDistance();
     delay(100);
     
+    TurnLeft(45);
+    
+    Stop();
+    distances[2] = MeasureDistance();
+    delay(100);
+    
+    TurnLeft(45);
+    
+    Stop();
+    distances[3] = MeasureDistance();
+    delay(100);
+    
+    TurnLeft(45);
+    
+    Stop();
+    distances[4] = MeasureDistance();
+    delay(100);
+    
+    TurnLeft(45);
+    
+    Stop();
+    distances[5] = MeasureDistance();
+    delay(100);
+    
+    TurnLeft(45);
+    
+    Stop();
+    distances[6] = MeasureDistance();
+    delay(100);
+    
+    
+    /*
     TurnRight(135);
     
     Stop();
@@ -156,34 +222,58 @@ void Main(){
     Stop();
     distances[3] = MeasureDistance();
     delay(100);
-    
+    */
     /*Serial.println("Measured distances:");
     for (int x = 0; x < 4; x++)
     {
     Serial.println(distances[x]);
     }*/
     
-    int Position = FindMax(distances, 0, 3);
+    int Position = FindMax(distances, 0, 7);
     switch(Position)
     {
        case 0:
+        TurnLeft(90);
+        
+        Stop();
+        delay(1000);
+        break;
+       
+       case 1:
         TurnLeft(135);
         
         Stop();
         delay(1000);
         break;
-       case 1:
-        TurnLeft(180);
-        
-        Stop();
-        delay(1000);
-        break;
+       
        case 2: 
-        TurnLeft(45);
+        TurnLeft(180);
        
        Stop();
         delay(1000);
         break;
+        
+        case 3: 
+        TurnRight(135);
+       
+       Stop();
+        delay(1000);
+        break;
+        
+        case 4: 
+        TurnRight(90);
+       
+       Stop();
+        delay(1000);
+        break;
+        
+        case 5: 
+        TurnRight(45);
+       
+       Stop();
+        delay(1000);
+        break;
+        
        default:
        Stop();
        delay(1000);
@@ -217,7 +307,7 @@ void loop() {
   // put your main code here, to run repeatedly: 
  
   Main();
-  
+  //TurnTest4();
   
 }
 
@@ -260,9 +350,30 @@ void TurnTest3(){
   delay(4500);
 }
 
+void TurnTest4() {
+  delay(4000);
+  TurnRight(360);
+  Stop();
+  delay(4000);
+  TurnLeft(360);
+  Stop();
+  delay(4000);
+  TurnRight(180);
+  Stop();
+  delay(4000);
+  TurnLeft(180);
+  Stop();
+  delay(4000);
+}
+
 void SensorTest(){
   //Test av avståndssensorn
   
   Serial.println(MeasureDistance());
   delay(100);
+}
+
+void driveTest()
+{
+  DriveForward();
 }
