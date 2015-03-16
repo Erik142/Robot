@@ -11,8 +11,8 @@
 #define TXPIN 13
 #define RXPIN 12
 
-short mode = 1;
-short lastmode = 1;
+short mode = 2;
+short lastmode = 2;
 float pwm_left_turbo = 243.3;
 float pwm_left_normal = 168;
 short pwm_right_normal = 180;
@@ -119,7 +119,7 @@ void TurnLeft(int Grader) {
 }
 
 //Funktion för att omvandla avståndssensorns data till avstånd.
-int MeasureDistance(){
+long MeasureDistance(){
   digitalWrite(SENSORTRIGGER, LOW);
   delayMicroseconds(2);
   digitalWrite(SENSORTRIGGER, HIGH);
@@ -132,9 +132,7 @@ int MeasureDistance(){
     lastDistance = MAXDISTANCE;
     return MAXDISTANCE;
   }
-  else
-  {
-  if (distance < 10 && lastDistance == MAXDISTANCE || distance < 0) {
+  else if (distance < 6 && lastDistance == MAXDISTANCE || distance < 0) {
     return lastDistance;
   }
   else
@@ -142,7 +140,7 @@ int MeasureDistance(){
     lastDistance = distance;
     return distance;
   }
-  }
+  
   
 }
 
@@ -358,7 +356,7 @@ void loop() {
   if (Serial.available() > 0)
   {
     int value = Serial.parseInt();
-    if (value != 0)
+    if (value != NULL)
     {
       mode = value;
     }
@@ -367,7 +365,7 @@ void loop() {
   if (mySerial.available() > 0)
   {
     int value = mySerial.parseInt();
-    if (value != 0)
+    if (value != NULL)
     {
       mode = value;
     }
@@ -387,7 +385,9 @@ void loop() {
   break;
   default:
   Serial.println("Need mode...");
+  Serial.println("mode = " + mode);
   mySerial.println("Need mode...");
+  mySerial.println("mode = " + mode);
   break;
  }
  }
